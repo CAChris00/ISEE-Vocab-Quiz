@@ -1,0 +1,851 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>ISEE Vocab Drill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one narrow column like a test booklet page. Paper ground, navy ink, pencil-yellow highlighter as the single bold gesture (the stem word and the filled-in blank). */
+:root {
+  --bg: #eef1f6;
+  --surface: #ffffff;
+  --ink: #14213d;
+  --muted: #566180;
+  --rule: #cdd5e4;
+  --pencil: #f4b400;
+  --on-pencil: #14213d;
+  --good: #1b7f55;
+  --bad: #c0352b;
+  --good-tint: #e3f4ec;
+  --bad-tint: #fbe7e4;
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1526; --surface: #172039; --ink: #e8ecf6; --muted: #9ba7c6; --rule: #2c3858;
+    --pencil: #f7c531; --on-pencil: #14213d; --good: #4cc690; --bad: #ff7f73;
+    --good-tint: #123228; --bad-tint: #3b1d1f; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1526; --surface: #172039; --ink: #e8ecf6; --muted: #9ba7c6; --rule: #2c3858;
+  --pencil: #f7c531; --on-pencil: #14213d; --good: #4cc690; --bad: #ff7f73;
+  --good-tint: #123228; --bad-tint: #3b1d1f; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  padding-block: 24px 40px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+main { width: 100%; max-width: 640px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+section { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+h1, h2 { font-family: var(--font-display); font-stretch: 112%; font-weight: 800; line-height: 1.05; margin: 0; text-wrap: balance; letter-spacing: -0.01em; }
+h1 { font-size: clamp(2rem, 8vw, 3rem); }
+h2 { font-size: 1.5rem; }
+h2.sub { font-size: 1.125rem; }
+p { margin: 0; }
+.muted { color: var(--muted); }
+.small { font-size: 14px; }
+
+button { font: inherit; color: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--pencil); outline-offset: 2px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 52px; padding: 12px 24px; border-radius: 10px; border: 2px solid var(--ink);
+  background: transparent; font-weight: 700; font-size: 1rem; text-align: center;
+}
+.btn:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); }
+.btn.primary { background: var(--pencil); color: var(--on-pencil); border-color: var(--pencil); font-size: 1.125rem; }
+.btn.primary:hover { filter: brightness(0.95); }
+.btn.quiet { border-color: var(--rule); font-weight: 600; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn-row > .btn { flex: 1 1 180px; }
+
+/* Home */
+.best { display: flex; align-items: baseline; gap: 12px; border-top: 2px solid var(--ink); padding-top: 14px; }
+.best .num { font-family: var(--font-display); font-stretch: 112%; font-weight: 900; font-size: clamp(3.5rem, 18vw, 5.5rem); line-height: 0.95; font-variant-numeric: tabular-nums; }
+.best .of { font-family: var(--font-mono); color: var(--muted); font-size: 1.25rem; }
+.best .lbl { margin-left: auto; text-align: right; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; border-top: 1px solid var(--rule); padding-top: 14px; margin: 0; }
+.stat dt { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.stat dd { margin: 2px 0 0; font-size: 1.5rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.notice { border-left: 4px solid var(--pencil); padding: 8px 12px; background: var(--surface); font-size: 14px; }
+
+/* Quiz */
+.qhead { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; }
+.qhead .streak { color: var(--muted); }
+.ticks { display: grid; gap: 4px; }
+.tick { height: 8px; border-radius: 2px; background: var(--rule); }
+.tick.cur { background: var(--ink); }
+.tick.ok { background: var(--good); }
+.tick.bad { background: var(--bad); }
+.directions { font-size: 14px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 12px; }
+.stem-wrap { padding-block: 4px 8px; }
+.stem {
+  display: inline; font-family: var(--font-display); font-stretch: 114%; font-weight: 900; text-transform: uppercase;
+  font-size: clamp(2rem, 10vw, 3.6rem); line-height: 1.25; letter-spacing: 0.01em; overflow-wrap: anywhere;
+  background: linear-gradient(transparent 58%, var(--pencil) 58%, var(--pencil) 92%, transparent 92%);
+  padding-inline: 4px; -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+.sent { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.25rem, 5.2vw, 1.65rem); line-height: 1.55; text-wrap: pretty; }
+.blank {
+  display: inline-block; min-width: 4.5em; text-align: center; border-bottom: 3px solid var(--ink); line-height: 1.1;
+  font-weight: 800; text-transform: lowercase; padding-inline: 4px;
+}
+.blank.filled { background: var(--pencil); color: var(--on-pencil); border-bottom-color: var(--pencil); border-radius: 3px; }
+.options { display: flex; flex-direction: column; gap: 10px; }
+.opt {
+  display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; align-items: center; gap: 14px;
+  width: 100%; min-height: 60px; padding: 10px 14px; text-align: left;
+  background: var(--surface); border: 2px solid var(--rule); border-radius: 12px; font-size: 1.125rem; font-weight: 600;
+}
+.opt:hover { border-color: var(--ink); }
+.bubble {
+  width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--ink); display: grid; place-items: center;
+  font-family: var(--font-mono); font-weight: 500; font-size: 0.95rem;
+}
+.opt .tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+.opt[data-state] { cursor: default; }
+.opt[data-state="correct"] { border-color: var(--good); background: var(--good-tint); }
+.opt[data-state="correct"] .bubble { background: var(--good); border-color: var(--good); color: var(--surface); }
+.opt[data-state="correct"] .tag { color: var(--good); }
+.opt[data-state="wrong"] { border-color: var(--bad); background: var(--bad-tint); }
+.opt[data-state="wrong"] .bubble { background: var(--bad); border-color: var(--bad); color: var(--surface); }
+.opt[data-state="wrong"] .tag { color: var(--bad); }
+.opt[data-state="dim"] { opacity: 0.6; }
+.opt[data-state="dim"]:hover { border-color: var(--rule); }
+.feedback { min-height: 3.2em; font-size: 1.0625rem; }
+.feedback strong { font-weight: 800; }
+.feedback .ok { color: var(--good); }
+.feedback .no { color: var(--bad); }
+
+/* Result */
+.score { display: flex; align-items: baseline; gap: 10px; border-top: 2px solid var(--ink); padding-top: 14px; }
+.score .num { font-family: var(--font-display); font-stretch: 112%; font-weight: 900; font-size: clamp(5rem, 28vw, 8rem); line-height: 0.9; font-variant-numeric: tabular-nums; }
+.score .of { font-family: var(--font-mono); font-size: 1.75rem; color: var(--muted); }
+.badge { display: inline-block; align-self: flex-start; background: var(--pencil); color: var(--on-pencil); font-family: var(--font-mono); font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; }
+.facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; border-top: 1px solid var(--rule); padding-top: 14px; margin: 0; }
+
+.list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
+.list li { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr) auto; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--rule); align-items: baseline; }
+.list .w { font-weight: 800; font-stretch: 108%; text-transform: uppercase; letter-spacing: 0.02em; overflow-wrap: anywhere; }
+.list .m { color: var(--muted); overflow-wrap: anywhere; }
+.list .n { font-family: var(--font-mono); font-size: 12px; color: var(--bad); white-space: nowrap; }
+.list.two li { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
+.empty { color: var(--muted); border-top: 1px solid var(--rule); padding-top: 12px; }
+
+.cheers { display: flex; flex-direction: column; gap: 8px; }
+.cheer { background: var(--pencil); color: var(--on-pencil); padding: 12px 14px; border-radius: 10px; font-weight: 700; line-height: 1.35; }
+
+/* Words */
+textarea {
+  width: 100%; min-height: 240px; resize: vertical; padding: 12px; background: var(--surface); color: var(--ink);
+  border: 2px solid var(--rule); border-radius: 10px; font-family: var(--font-mono); font-size: 14px; line-height: 1.6;
+}
+textarea:focus-visible { border-color: var(--ink); outline-offset: 0; }
+.field-note { font-family: var(--font-mono); font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.field-note.err { color: var(--bad); }
+.file-btn { position: relative; overflow: hidden; }
+.file-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+.block { display: flex; flex-direction: column; gap: 12px; }
+details { border-top: 1px solid var(--rule); padding-top: 10px; }
+summary { cursor: pointer; font-weight: 700; padding-block: 6px; }
+.foot { font-family: var(--font-mono); font-size: 12px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 12px; }
+
+@media (max-width: 440px) {
+  .list li { grid-template-columns: minmax(0, 1fr) auto; }
+  .list .m { grid-column: 1 / -1; grid-row: 2; }
+  .list.two li { grid-template-columns: minmax(0, 1fr); }
+  .opt { gap: 10px; padding: 10px; grid-template-columns: 40px minmax(0, 1fr); }
+  .opt .tag { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<main>
+  <!-- HOME -->
+  <section id="home" aria-labelledby="homeTitle">
+    <div class="block">
+      <p class="eyebrow">ISEE Upper Level · Verbal Reasoning</p>
+      <h1 id="homeTitle">Vocabulary drill</h1>
+    </div>
+    <div class="best">
+      <span class="num" id="bestNum">—</span><span class="of">/100</span>
+      <span class="eyebrow lbl">Best score<br>ever</span>
+    </div>
+    <dl class="stats">
+      <div class="stat"><dt>Tests taken</dt><dd id="stTests">0</dd></div>
+      <div class="stat"><dt>Words ready</dt><dd id="stWords">0</dd></div>
+      <div class="stat"><dt>To review</dt><dd id="stMissed">0</dd></div>
+      <div class="stat"><dt>Total correct</dt><dd id="stCorrect">0</dd></div>
+      <div class="stat"><dt>Answered</dt><dd id="stAnswered">0</dd></div>
+      <div class="stat"><dt>Overall correct</dt><dd id="stPct">—</dd></div>
+    </dl>
+    <p class="notice" id="homeNotice" hidden></p>
+    <div class="block">
+      <button class="btn primary" id="startBtn" type="button">Start 100-question test</button>
+      <button class="btn quiet" id="wordsBtn" type="button">Word list and missed words</button>
+      <p class="small muted">Each test mixes synonym questions and sentence completion questions. Words you miss come up 5 times as often until you get them right.</p>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" hidden aria-label="Test in progress">
+    <div class="qhead"><span id="qCount">Question 1 of 10</span><span class="streak" id="qStreak">Streak 0</span></div>
+    <div class="ticks" id="ticks" aria-hidden="true"></div>
+    <p class="directions" id="directions"></p>
+    <div class="stem-wrap">
+      <span class="stem" id="stem"></span>
+      <p class="sent" id="sent" hidden></p>
+    </div>
+    <div class="options" id="options" role="group" aria-label="Answer choices"></div>
+    <p class="feedback" id="feedback" aria-live="polite"></p>
+    <div class="btn-row"><button class="btn primary" id="nextBtn" type="button" hidden>Next question</button></div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="result" hidden aria-labelledby="resTitle">
+    <div class="block">
+      <p class="eyebrow">Test complete</p>
+      <h2 id="resTitle">Your score</h2>
+    </div>
+    <div class="cheers" id="cheers" hidden></div>
+    <span class="badge" id="newBest" hidden>New best score</span>
+    <div class="score"><span class="num" id="resNum">0</span><span class="of" id="resOf">/100</span></div>
+    <dl class="facts">
+      <div class="stat"><dt>Longest streak</dt><dd id="resStreak">0</dd></div>
+      <div class="stat"><dt>Best score ever</dt><dd id="resBest">0/100</dd></div>
+      <div class="stat"><dt>Total correct</dt><dd id="resTotal">0</dd></div>
+      <div class="stat"><dt>Overall correct</dt><dd id="resPct">—</dd></div>
+    </dl>
+    <div class="block">
+      <h2 class="sub" id="resMissHead">Words to review</h2>
+      <div id="resMiss"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn primary" id="againBtn" type="button">Take another test</button>
+      <button class="btn quiet" id="homeBtn" type="button">Back to start</button>
+    </div>
+  </section>
+
+  <!-- WORDS -->
+  <section id="words" hidden aria-labelledby="wordsTitle">
+    <div class="block">
+      <p class="eyebrow">Source files</p>
+      <h2 id="wordsTitle">Word list and missed words</h2>
+    </div>
+
+    <div class="block">
+      <h2 class="sub">Word list</h2>
+      <p class="small muted">Type or paste one vocabulary word per line. Claude looks up the synonyms and writes a practice sentence for each new word. Lines starting with # are ignored.</p>
+      <label class="eyebrow" for="wordText">Vocabulary words</label>
+      <textarea id="wordText" spellcheck="false" autocomplete="off"></textarea>
+      <p class="field-note" id="wordNote"></p>
+      <div class="btn-row">
+        <button class="btn primary" id="saveWords" type="button">Save and look up words</button>
+        <label class="btn quiet file-btn">Load from a text file<input type="file" id="fileIn" accept=".txt,.csv,.tsv,.md,text/plain,text/csv"></label>
+      </div>
+      <p class="field-note" id="lookupNote" aria-live="polite"></p>
+      <details id="readyBox">
+        <summary id="readySum">Words ready</summary>
+        <div id="readyList"></div>
+      </details>
+    </div>
+
+    <div class="block">
+      <h2 class="sub">Missed words file</h2>
+      <div id="missList"></div>
+      <div class="btn-row">
+        <button class="btn quiet" id="saveMissed" type="button" hidden>Save missed words as a file</button>
+        <button class="btn quiet" id="clearMissed" type="button" hidden>Clear missed list</button>
+      </div>
+      <p class="field-note" id="missNote" aria-live="polite"></p>
+    </div>
+
+    <div class="btn-row"><button class="btn primary" id="backBtn" type="button">Back to start</button></div>
+  </section>
+
+  <p class="foot" id="saveNote">Scores and missed words are saved in this browser.</p>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  /* Built-in entries: word | part of speech | synonyms | sentence with one blank.
+     Words added later are looked up by Claude and stored with the page. */
+  var BUILTIN_RAW = [
+    "abate|verb|lessen;subside|The storm began to ___ by morning, and the winds finally died down.",
+    "abolish|verb|eliminate;end|The council voted to ___ the old law because it treated people unfairly.",
+    "abundant|adj|plentiful;ample|Fruit was so ___ in the valley that farmers could not sell all of it.",
+    "accomplice|noun|helper;partner in crime|The thief's ___ waited in the car while he went into the shop.",
+    "adamant|adj|unyielding;stubborn|Though everyone urged her to change her mind, she stayed ___ and refused.",
+    "adept|adj|skilled;expert|She is ___ at fixing computers and can solve almost any problem in minutes.",
+    "adversary|noun|opponent;enemy|The chess champion studied her ___ carefully before their match began.",
+    "aloof|adj|distant;detached|He seemed ___ at the party, standing alone and speaking to no one.",
+    "ambiguous|adj|unclear;vague|The directions were so ___ that we could not tell whether to turn left or right.",
+    "amiable|adj|friendly;pleasant|Everyone enjoyed talking to the ___ neighbor, who greeted them with a warm smile.",
+    "animosity|noun|hostility;resentment|Years of arguing over the fence left the two families full of ___ toward each other.",
+    "arduous|adj|difficult;exhausting|The climb to the summit was so ___ that several hikers had to turn back.",
+    "astute|adj|shrewd;perceptive|The ___ detective noticed a small detail that everyone else had overlooked.",
+    "audacious|adj|bold;daring|It was an ___ plan to cross the desert on foot with so little water.",
+    "austere|adj|severe;plain|The monk lived in an ___ room with nothing but a narrow bed and a single chair.",
+    "banal|adj|ordinary;unoriginal|The movie's plot was so ___ that I guessed every twist in advance.",
+    "benevolent|adj|kind;generous|The ___ king gave food and money to the poor families in his kingdom.",
+    "bolster|verb|support;strengthen|The coach tried to ___ the team's confidence with a rousing speech.",
+    "brevity|noun|briefness;shortness|The speaker was praised for her ___; she made her point in only two minutes.",
+    "candid|adj|frank;honest|I appreciate your ___ answer, even though the truth was hard to hear.",
+    "capricious|adj|unpredictable;fickle|The ___ weather changed from sun to storm and back again within an hour.",
+    "colossal|adj|enormous;gigantic|The ___ statue towered over the city, taller than any building nearby.",
+    "commend|verb|praise;applaud|The principal chose to ___ the students for their remarkable effort.",
+    "condemn|verb|denounce;criticize|Leaders from many countries gathered to ___ the cruel attack.",
+    "conspicuous|adj|noticeable;obvious|His bright orange jacket made him ___ in a crowd of people wearing gray coats.",
+    "contempt|noun|scorn;disdain|She looked at the cheater with ___, unable to hide her disgust.",
+    "covet|verb|desire;crave|Many collectors ___ the rare stamp and would pay almost anything to own it.",
+    "cunning|adj|crafty;sly|The ___ fox tricked the farmer into leaving the henhouse unguarded.",
+    "defiant|adj|rebellious;disobedient|The ___ child crossed her arms and refused to follow any instructions.",
+    "deplete|verb|exhaust;use up|Burning the heater all night will ___ our supply of firewood before the week is over.",
+    "diligent|adj|hardworking;careful|The ___ student studied every night and never missed an assignment.",
+    "discord|noun|conflict;disagreement|The constant arguing created ___ in a family that was once peaceful.",
+    "dismal|adj|gloomy;dreary|The gray sky and steady rain made for a ___ afternoon.",
+    "eccentric|adj|odd;peculiar|Our ___ uncle wears a cape to dinner and keeps a goat as a pet.",
+    "eloquent|adj|articulate;expressive|The ___ speaker moved the crowd to tears with her graceful words.",
+    "emulate|verb|imitate;copy|Young athletes often try to ___ the champions they admire.",
+    "endeavor|verb|attempt;strive|We will ___ to finish the project before the deadline, though it will be difficult.",
+    "enigma|noun|mystery;puzzle|The missing painting remained an ___ that no investigator could solve.",
+    "ephemeral|adj|fleeting;short-lived|The beauty of the cherry blossoms is ___, lasting only a few days.",
+    "evade|verb|avoid;escape|The thief tried to ___ the police by hiding in a dark alley.",
+    "exemplary|adj|admirable;model|Her ___ behavior made her a model for the rest of the class.",
+    "feeble|adj|weak;frail|The sick kitten gave only a ___ cry, too tired to meow any louder.",
+    "fervent|adj|passionate;intense|The fans gave ___ support, cheering loudly through the entire game.",
+    "frugal|adj|thrifty;economical|He was so ___ that he saved every penny and never bought anything unnecessary.",
+    "futile|adj|useless;pointless|It was ___ to argue with him because he never changed his mind.",
+    "gregarious|adj|sociable;outgoing|The ___ girl loved parties and made friends everywhere she went.",
+    "haughty|adj|arrogant;snobbish|The ___ duke looked down on everyone and refused to speak to ordinary people.",
+    "hinder|verb|obstruct;hamper|Heavy snow will ___ travelers and slow their trip by many hours.",
+    "hostile|adj|unfriendly;antagonistic|The ___ crowd shouted angrily at the visiting team.",
+    "impartial|adj|unbiased;fair|A judge must remain ___ and not favor either side of the argument.",
+    "indifferent|adj|uninterested;unconcerned|He seemed ___ about the outcome and just shrugged when we told him the score.",
+    "inept|adj|clumsy;unskilled|The ___ waiter dropped three plates and spilled soup on a customer.",
+    "innate|adj|inborn;natural|Her ___ talent for music appeared before she ever took a lesson.",
+    "jubilant|adj|joyful;triumphant|The ___ fans cheered and hugged each other when their team won the championship.",
+    "lavish|adj|extravagant;luxurious|The king threw a ___ feast with golden plates and endless courses.",
+    "lethargic|adj|sluggish;drowsy|After the enormous meal, we felt ___ and wanted only to nap.",
+    "meager|adj|scanty;inadequate|The ___ meal of thin soup and one slice of bread left us hungry.",
+    "mediocre|adj|average;second-rate|Her performance was ___, neither terrible nor impressive.",
+    "meticulous|adj|precise;thorough|The ___ clockmaker checked every tiny gear twice.",
+    "novice|noun|beginner;amateur|As a ___ at skiing, he stayed on the gentlest slope.",
+    "obscure|adj|unknown;hidden|The ___ poet was known to only a handful of readers.",
+    "obsolete|adj|outdated;old-fashioned|Typewriters became ___ once almost everyone owned a computer.",
+    "ponder|verb|consider;reflect|She sat quietly to ___ her decision before giving an answer.",
+    "prudent|adj|sensible;wise|It is ___ to save some money for emergencies.",
+    "rebuke|verb|scold;reprimand|The teacher had to ___ the students for talking during the test.",
+    "reluctant|adj|unwilling;hesitant|He was ___ to jump into the cold lake and stood shivering on the shore.",
+    "resilient|adj|quick to recover;hardy|The ___ child bounced back quickly after every disappointment.",
+    "rigid|adj|stiff;inflexible|The ___ metal rod would not bend no matter how hard he pushed.",
+    "scarce|adj|rare;insufficient|Water is ___ in the desert, so travelers carry as much as they can.",
+    "sever|verb|cut;detach|The sharp blade was strong enough to ___ the thick rope in one stroke.",
+    "solitary|adj|alone;lone|A ___ tree stood in the middle of the empty field.",
+    "spontaneous|adj|unplanned;impulsive|The trip was ___; we decided that morning and left within an hour.",
+    "sturdy|adj|strong;solid|The ___ bridge held firm even under the weight of heavy trucks.",
+    "tenacious|adj|persistent;determined|The ___ climber refused to give up despite the storm.",
+    "timid|adj|shy;fearful|The ___ puppy hid under the bed whenever visitors arrived.",
+    "trivial|adj|unimportant;minor|Do not worry about such a ___ mistake; it hardly matters.",
+    "verbose|adj|wordy;long-winded|The ___ speech lasted an hour when five minutes would have been enough.",
+    "vital|adj|essential;crucial|Water is ___ to all living things; none can survive without it.",
+    "volatile|adj|unstable;explosive|The ___ situation could erupt into violence at any moment.",
+    "wane|verb|decline;fade|As the evening went on, the crowd's excitement began to ___.",
+    "wither|verb|shrivel;wilt|Without water, the flowers will ___ and die.",
+    "zealous|adj|eager;enthusiastic|The ___ volunteer worked day and night for the cause."
+  ];
+  var BUILTIN = {}, BUILTIN_ORDER = [];
+  BUILTIN_RAW.forEach(function (r) {
+    var p = r.split("|");
+    BUILTIN[p[0]] = { p: p[1], syns: p[2].split(";"), x: p[3] };
+    BUILTIN_ORDER.push(p[0]);
+  });
+  var DEFAULT_TEXT = BUILTIN_ORDER.join("\n");
+
+  var LS_KEY = "isee-vocab-drill-v2";
+  var TEST_LEN = 100, MIN_WORDS = 50, MISS_WEIGHT = 5, BATCH = 12;
+
+  var state = { text: DEFAULT_TEXT, extra: {}, entries: [], pending: [], missed: {}, best: null, tests: 0, totalCorrect: 0, totalAnswered: 0, where: "device" };
+  var db = null, dl = null, smp = null, sampleChecked = false, lookingUp = false;
+  var q = null;
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------- word list ---------- */
+  function parseWords(text) {
+    var out = [], seen = {}, skipped = 0;
+    String(text || "").split(/\r?\n/).forEach(function (raw) {
+      var line = raw.trim();
+      if (!line || line.charAt(0) === "#") return;
+      var first = line.split(/\s*(?::|\t|,|;|\s[-–—]\s)\s*/)[0].trim();
+      if (!/^[A-Za-z][A-Za-z' -]*$/.test(first)) { skipped++; return; }
+      var key = first.toLowerCase();
+      if (seen[key]) { skipped++; return; }
+      seen[key] = true;
+      out.push({ w: first, key: key });
+    });
+    return { words: out, skipped: skipped };
+  }
+  function infoFor(key) { return state.extra[key] || BUILTIN[key] || null; }
+  function rebuild() {
+    var p = parseWords(state.text).words;
+    state.entries = []; state.pending = [];
+    p.forEach(function (e) {
+      var inf = infoFor(e.key);
+      if (inf && inf.syns && inf.syns.length) state.entries.push({ w: e.w, key: e.key, p: inf.p || "", syns: inf.syns, x: inf.x || "" });
+      else state.pending.push(e);
+    });
+  }
+
+  /* ---------- storage ---------- */
+  function readLocal() { try { return JSON.parse(localStorage.getItem(LS_KEY)); } catch (e) { return null; } }
+  function writeLocal() {
+    try { localStorage.setItem(LS_KEY, JSON.stringify({ text: state.text, extra: state.extra, missed: state.missed, best: state.best, bestOf: TEST_LEN, tests: state.tests, totalCorrect: state.totalCorrect, totalAnswered: state.totalAnswered })); } catch (e) { /* storage may be unavailable */ }
+  }
+  async function persist(parts) {
+    writeLocal();
+    if (!db) { state.where = "device"; return renderNote(); }
+    try {
+      if (parts.indexOf("words") > -1) await db.doc("vocab/words").set({ text: state.text });
+      if (parts.indexOf("dict") > -1) await db.doc("vocab/dict").set({ items: state.extra });
+      if (parts.indexOf("missed") > -1) await db.doc("vocab/missed").set({ items: state.missed });
+      if (parts.indexOf("stats") > -1) await db.doc("vocab/stats").set({ best: state.best, bestOf: TEST_LEN, tests: state.tests, totalCorrect: state.totalCorrect, totalAnswered: state.totalAnswered });
+      state.where = "page";
+    } catch (e) { state.where = "device"; }
+    renderNote();
+  }
+  function renderNote() {
+    $("saveNote").textContent = state.where === "page"
+      ? "Scores, word list and missed words are saved with this page."
+      : "Scores, word list and missed words are saved in this browser only.";
+  }
+  async function load() {
+    var local = readLocal(), fromDb = null;
+    try { if (window.claude && window.claude.use) db = await window.claude.use("db"); } catch (e) { db = null; }
+    if (db) {
+      try {
+        var r = await Promise.all([db.doc("vocab/words").get(), db.doc("vocab/missed").get(), db.doc("vocab/stats").get(), db.doc("vocab/dict").get()]);
+        if (r[0].exists || r[1].exists || r[2].exists || r[3].exists) {
+          fromDb = {
+            text: r[0].exists ? r[0].data().text : null,
+            missed: r[1].exists ? r[1].data().items : null,
+            best: r[2].exists ? r[2].data().best : null,
+            bestOf: r[2].exists ? r[2].data().bestOf : null,
+            tests: r[2].exists ? r[2].data().tests : 0,
+            totalCorrect: r[2].exists ? r[2].data().totalCorrect : 0,
+            totalAnswered: r[2].exists ? r[2].data().totalAnswered : 0,
+            extra: r[3].exists ? r[3].data().items : null
+          };
+        }
+        state.where = "page";
+      } catch (e) { fromDb = null; }
+    }
+    var src = fromDb || local || {};
+    if (typeof src.text === "string" && src.text.trim()) state.text = src.text;
+    /* database snapshots are read-only, so keep editable copies */
+    if (src.extra && typeof src.extra === "object") state.extra = JSON.parse(JSON.stringify(src.extra));
+    if (src.missed && typeof src.missed === "object") state.missed = JSON.parse(JSON.stringify(src.missed));
+    /* a best score only counts if it was out of the current test length */
+    if (typeof src.best === "number" && src.bestOf === TEST_LEN) state.best = src.best;
+    if (typeof src.tests === "number") state.tests = src.tests;
+    if (typeof src.totalCorrect === "number") state.totalCorrect = src.totalCorrect;
+    if (typeof src.totalAnswered === "number") state.totalAnswered = src.totalAnswered;
+    rebuild();
+    try { if (window.claude && window.claude.use) dl = await window.claude.use("downloads"); } catch (e) { dl = null; }
+    try { if (window.claude && window.claude.use) smp = await window.claude.use("sample"); } catch (e) { smp = null; }
+    sampleChecked = true;
+    renderNote(); renderHome(); if (!$("words").hidden) renderWords();
+  }
+
+  /* ---------- helpers ---------- */
+  function shuffle(a) {
+    a = a.slice();
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  }
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function show(id) {
+    ["home", "quiz", "result", "words"].forEach(function (s) { $(s).hidden = s !== id; });
+    window.scrollTo(0, 0);
+  }
+  function el(tag, cls, text) { var n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; }
+  function missedCount() { return Object.keys(state.missed).length; }
+  function meaningOf(key, fallback) { var i = infoFor(key); return i && i.syns && i.syns[0] ? i.syns[0] : fallback || ""; }
+
+  /* ---------- test building ---------- */
+  function drawWords(n, from) {
+    var pool = (from || state.entries).slice(), picks = [];
+    while (picks.length < n && pool.length) {
+      var wts = pool.map(function (e) { return state.missed[e.key] ? MISS_WEIGHT : 1; });
+      var total = wts.reduce(function (a, b) { return a + b; }, 0), r = Math.random() * total, idx = 0;
+      for (; idx < wts.length - 1; idx++) { r -= wts[idx]; if (r < 0) break; }
+      picks.push(pool.splice(idx, 1)[0]);
+    }
+    return picks;
+  }
+  function synQuestion(entry) {
+    var correct = pick(entry.syns), banned = {};
+    entry.syns.forEach(function (s) { banned[s.toLowerCase()] = true; });
+    var cands = shuffle(state.entries.filter(function (e) { return e.key !== entry.key; })).map(function (e) { return pick(e.syns); });
+    var bad = [];
+    for (var i = 0; i < cands.length && bad.length < 3; i++) {
+      var k = cands[i].toLowerCase();
+      if (!banned[k]) { banned[k] = true; bad.push(cands[i]); }
+    }
+    if (bad.length < 3) return null;
+    var opts = shuffle([correct].concat(bad));
+    return { type: "syn", entry: entry, correct: correct, options: opts, answer: opts.indexOf(correct) };
+  }
+  function sentQuestion(entry) {
+    var others = shuffle(state.entries.filter(function (e) { return e.key !== entry.key; }));
+    var same = others.filter(function (e) { return e.p && e.p === entry.p; });
+    var rest = others.filter(function (e) { return !(e.p && e.p === entry.p); });
+    var bad = same.concat(rest).slice(0, 3).map(function (e) { return e.w.toLowerCase(); });
+    if (bad.length < 3) return null;
+    var correct = entry.w.toLowerCase(), opts = shuffle([correct].concat(bad));
+    return { type: "sent", entry: entry, correct: correct, options: opts, answer: opts.indexOf(correct) };
+  }
+  function hasSent(e) { return !!(e.x && e.x.indexOf("___") > -1); }
+  /* each word can give one synonym question and one sentence question */
+  function canTest() { return state.entries.length + state.entries.filter(hasSent).length >= TEST_LEN; }
+  function buildTest(n) {
+    var first = drawWords(Math.min(n, state.entries.length)), plan = [];
+    first.forEach(function (e) { plan.push({ e: e, t: hasSent(e) && Math.random() < 0.5 ? "sent" : "syn" }); });
+    var need = n - plan.length;
+    if (need > 0) {
+      var firstType = {};
+      plan.forEach(function (p) { firstType[p.e.key] = p.t; });
+      drawWords(need, first.filter(hasSent)).forEach(function (e) {
+        plan.push({ e: e, t: firstType[e.key] === "sent" ? "syn" : "sent" });
+      });
+    }
+    var items = plan.map(function (p) { return p.t === "sent" ? sentQuestion(p.e) : synQuestion(p.e); }).filter(Boolean);
+    return shuffle(items);
+  }
+  async function startTest() {
+    if (lookingUp) return;
+    if (state.pending.length && smp) {
+      var hn = $("homeNotice");
+      hn.hidden = false;
+      hn.textContent = "Claude is looking up " + state.pending.length + " new words. This can take up to a minute.";
+      $("startBtn").disabled = true;
+      await lookupPending();
+      renderHome();
+    }
+    if (!canTest()) return;
+    var items = buildTest(TEST_LEN);
+    if (items.length < TEST_LEN) return;
+    q = { items: items, i: 0, results: [], streak: 0, longest: 0, answered: false };
+    show("quiz"); renderQuestion();
+  }
+
+  /* ---------- quiz ---------- */
+  var LETTERS = ["A", "B", "C", "D"];
+  function renderTicks() {
+    var t = $("ticks"); t.textContent = "";
+    t.style.gridTemplateColumns = "repeat(" + q.items.length + ", 1fr)";
+    t.style.gap = q.items.length > 20 ? "1px" : "4px";
+    q.items.forEach(function (_, i) {
+      var c = "tick";
+      if (i < q.results.length) c += q.results[i] ? " ok" : " bad";
+      else if (i === q.i) c += " cur";
+      t.appendChild(el("span", c));
+    });
+  }
+  function renderQuestion() {
+    var it = q.items[q.i]; q.answered = false;
+    $("qCount").textContent = "Question " + (q.i + 1) + " of " + q.items.length;
+    $("qStreak").textContent = "Streak " + q.streak;
+    renderTicks();
+    var stem = $("stem"), sent = $("sent");
+    if (it.type === "syn") {
+      $("directions").textContent = "Synonyms. Select the word whose meaning is closest to the word in capital letters.";
+      stem.hidden = false; sent.hidden = true; stem.textContent = it.entry.w;
+    } else {
+      $("directions").textContent = "Sentence completion. Select the word that best completes the sentence.";
+      stem.hidden = true; sent.hidden = false; sent.textContent = "";
+      var parts = it.entry.x.split("___");
+      sent.appendChild(document.createTextNode(parts[0]));
+      var b = el("span", "blank", ""); b.id = "blank"; b.setAttribute("aria-label", "blank"); sent.appendChild(b);
+      sent.appendChild(document.createTextNode(parts.slice(1).join("___")));
+    }
+    $("feedback").textContent = "";
+    $("nextBtn").hidden = true;
+    var box = $("options"); box.textContent = "";
+    it.options.forEach(function (o, i) {
+      var btn = el("button", "opt"); btn.type = "button";
+      btn.appendChild(el("span", "bubble", LETTERS[i]));
+      btn.appendChild(el("span", "txt", o));
+      btn.appendChild(el("span", "tag", ""));
+      btn.addEventListener("click", function () { answer(i); });
+      box.appendChild(btn);
+    });
+  }
+  function answer(i) {
+    if (q.answered) return;
+    q.answered = true;
+    var it = q.items[q.i]; it.chosen = i;
+    var ok = i === it.answer;
+    q.results[q.i] = ok;
+    q.streak = ok ? q.streak + 1 : 0;
+    q.longest = Math.max(q.longest, q.streak);
+    $("qStreak").textContent = "Streak " + q.streak;
+    renderTicks();
+    Array.prototype.forEach.call($("options").children, function (b, k) {
+      var tag = b.querySelector(".tag");
+      if (k === it.answer) { b.dataset.state = "correct"; tag.textContent = "Correct"; }
+      else if (k === i) { b.dataset.state = "wrong"; tag.textContent = "Your answer"; }
+      else b.dataset.state = "dim";
+    });
+    if (it.type === "sent") { var bl = $("blank"); bl.textContent = it.correct; bl.classList.add("filled"); }
+    var f = $("feedback"); f.textContent = "";
+    f.appendChild(el("strong", ok ? "ok" : "no", ok ? "Correct. " : "Not quite. "));
+    f.appendChild(document.createTextNode(it.type === "syn"
+      ? it.entry.w.toUpperCase() + " means " + it.correct + "."
+      : "The missing word is " + it.correct + ", which means " + meaningOf(it.entry.key, it.correct) + "."));
+    var nb = $("nextBtn"); nb.textContent = q.i === q.items.length - 1 ? "Next" : "Next question"; nb.hidden = false; nb.focus();
+  }
+  function next() {
+    if (!q.answered) return;
+    if (q.i === q.items.length - 1) { finish(); return; }
+    q.i++; renderQuestion();
+  }
+  function fmtPct(c, a) { return a ? (Math.floor(c * 1000 / a) / 10).toFixed(1) + "%" : "—"; }
+  function renderCheers(oldC, oldA) {
+    var c = state.totalCorrect, a = state.totalAnswered, box = $("cheers"), msgs = [];
+    box.textContent = "";
+    $("resTotal").textContent = c;
+    $("resPct").textContent = fmtPct(c, a);
+    if (Math.floor(c / 100) > Math.floor(oldC / 100))
+      msgs.push("Congratulations! You have now answered " + (Math.floor(c / 100) * 100) + " questions correctly.");
+    if (oldA > 0) {
+      var oldP = Math.floor(oldC * 100 / oldA), newP = Math.floor(c * 100 / a);
+      if (newP > oldP) msgs.push("Congratulations! Your overall average just climbed to " + newP + "%.");
+    }
+    msgs.forEach(function (m) { box.appendChild(el("p", "cheer", m)); });
+    box.hidden = !msgs.length;
+  }
+  async function finish() {
+    var score = q.results.filter(Boolean).length, total = q.items.length;
+    var prevBest = state.best, oldC = state.totalCorrect, oldA = state.totalAnswered;
+    q.items.forEach(function (it, i) {
+      var k = it.entry.key;
+      if (q.results[i]) delete state.missed[k];
+      else state.missed[k] = { w: it.entry.w, syn: meaningOf(k, it.correct), n: ((state.missed[k] && state.missed[k].n) || 0) + 1 };
+    });
+    state.tests++;
+    state.totalCorrect += score; state.totalAnswered += total;
+    var isNew = prevBest === null || score > prevBest;
+    if (isNew) state.best = score;
+    renderResult(score, total, isNew, prevBest);
+    renderCheers(oldC, oldA);
+    show("result");
+    await persist(["missed", "stats"]);
+  }
+  function renderResult(score, total, isNew, prevBest) {
+    $("resNum").textContent = score;
+    $("resOf").textContent = "/" + total;
+    $("resStreak").textContent = q.longest + " in a row";
+    $("resBest").textContent = state.best + "/" + TEST_LEN;
+    var nb = $("newBest");
+    nb.hidden = !(isNew || score === prevBest);
+    nb.textContent = isNew ? "New best score" : "Ties your best score";
+    var miss = q.items.filter(function (_, i) { return !q.results[i]; });
+    var box = $("resMiss"); box.textContent = "";
+    $("resMissHead").textContent = miss.length ? "Words to review" : "No misses";
+    if (!miss.length) { box.appendChild(el("p", "empty", "You got every question right. Take another test for a new set.")); return; }
+    var ul = el("ul", "list two");
+    miss.forEach(function (it) {
+      var li = el("li");
+      li.appendChild(el("span", "w", it.entry.w));
+      li.appendChild(el("span", "m", "means " + meaningOf(it.entry.key, it.correct)));
+      ul.appendChild(li);
+    });
+    box.appendChild(ul);
+    box.appendChild(el("p", "small muted", "These will come up 5 times as often in later tests until you answer them correctly."));
+  }
+
+  /* ---------- home ---------- */
+  function renderHome() {
+    $("bestNum").textContent = state.best === null ? "—" : state.best;
+    $("stTests").textContent = state.tests;
+    $("stWords").textContent = state.entries.length;
+    $("stMissed").textContent = missedCount();
+    $("stCorrect").textContent = state.totalCorrect;
+    $("stAnswered").textContent = state.totalAnswered;
+    $("stPct").textContent = fmtPct(state.totalCorrect, state.totalAnswered);
+    var ok = canTest();
+    $("startBtn").disabled = !ok;
+    var n = $("homeNotice");
+    if (!ok) { n.hidden = false; n.textContent = "A " + TEST_LEN + "-question test needs at least " + MIN_WORDS + " words with synonyms and sentences. Add words on the word list screen."; }
+    else if (state.pending.length) { n.hidden = false; n.textContent = state.pending.length + " words in your list still need a lookup and are left out of tests. Open the word list to look them up."; }
+    else n.hidden = true;
+  }
+
+  /* ---------- word lookup (Claude) ---------- */
+  function lookupPrompt(words) {
+    return [
+      "You are preparing vocabulary practice for a student taking the ISEE Upper Level test (grades 8 to 11).",
+      "For each word in the list, reply with only a JSON array with one object per word, in the same order:",
+      '{"w": the word exactly as given, "p": "adj" or "noun" or "verb" or "adv", "syns": [2 or 3 common synonyms, single words where possible, each easier than the word], "x": "a sentence"}.',
+      "Rules for x: exactly one blank written as ___ (three underscores). The word itself, in exactly the form given with no endings added, must be the one word that fits the blank best. Give context clues so the meaning can be worked out. 12 to 24 words long. For verbs, write the sentence so the base form fits, for example after \"to\" or a modal verb. Do not use the word anywhere else in the sentence.",
+      "Words: " + words.join(", ")
+    ].join("\n");
+  }
+  function validEntry(o, want) {
+    return o && typeof o.w === "string" && want[o.w.toLowerCase()] && Array.isArray(o.syns) && o.syns.length &&
+      o.syns.every(function (s) { return typeof s === "string" && s.trim(); }) &&
+      typeof o.x === "string" && o.x.split("___").length === 2;
+  }
+  function lookupError(code) {
+    if (code === "not_granted") return "Claude was not allowed to run for this page, so new words cannot be looked up.";
+    if (code === "rate_limited") return "Too many requests right now. Wait a minute, then press Save and look up words again.";
+    if (code === "sampling_disabled" || code === "not_declared" || code === "capability_disabled" || code === "capability_removed") return "Looking up new words is not available in this view.";
+    if (code === "session_expired") return "Sign in again, then try the lookup again.";
+    return "The lookup did not finish. Press Save and look up words to try again.";
+  }
+  async function lookupPending() {
+    var note = $("lookupNote");
+    if (lookingUp || !state.pending.length) return;
+    if (!smp) { note.classList.add("err"); note.textContent = sampleChecked ? "Looking up new words is not available in this view. These words are left out of tests: " + state.pending.map(function (p) { return p.w; }).join(", ") + "." : "Still connecting. Try again in a moment."; return; }
+    lookingUp = true; note.classList.remove("err");
+    var todo = state.pending.slice(), done = 0, failedMsg = "";
+    $("saveWords").disabled = true;
+    for (var i = 0; i < todo.length; i += BATCH) {
+      var batch = todo.slice(i, i + BATCH), want = {};
+      batch.forEach(function (b) { want[b.key] = true; });
+      note.textContent = "Looking up words " + (i + 1) + " to " + Math.min(i + BATCH, todo.length) + " of " + todo.length + "...";
+      try {
+        var arr = await smp.json(lookupPrompt(batch.map(function (b) { return b.w; })), { modelTier: "default" });
+        if (!Array.isArray(arr)) arr = [];
+        arr.forEach(function (o) {
+          if (!validEntry(o, want)) return;
+          var k = o.w.toLowerCase();
+          state.extra[k] = { p: String(o.p || "").toLowerCase(), syns: o.syns.slice(0, 3).map(function (s) { return s.trim(); }), x: o.x.trim() };
+          done++;
+        });
+        rebuild(); renderWords(); renderHome();
+        await persist(["dict"]);
+      } catch (e) { failedMsg = lookupError(e && e.code); break; }
+    }
+    lookingUp = false; $("saveWords").disabled = false;
+    rebuild(); renderWords(); renderHome();
+    var left = state.pending.length;
+    note.classList.toggle("err", !!failedMsg || left > 0);
+    note.textContent = failedMsg || ("Looked up " + done + " new words." + (left ? " " + left + " could not be looked up (" + state.pending.map(function (p) { return p.w; }).join(", ") + "). Check the spelling and try again." : ""));
+  }
+
+  /* ---------- words screen ---------- */
+  function updateWordNote() {
+    var p = parseWords($("wordText").value), n = $("wordNote");
+    var ready = p.words.filter(function (w) { return infoFor(w.key); }).length;
+    n.classList.toggle("err", p.words.length < MIN_WORDS);
+    n.textContent = p.words.length + " words found, " + ready + " ready, " + (p.words.length - ready) + " to look up" +
+      (p.skipped ? ", " + p.skipped + " lines skipped" : "") + (p.words.length < MIN_WORDS ? ". Add at least " + MIN_WORDS + " words for a " + TEST_LEN + "-question test." : ".");
+    return p;
+  }
+  function renderWords() {
+    if (document.activeElement !== $("wordText")) $("wordText").value = state.text;
+    updateWordNote();
+    $("readySum").textContent = "Words ready (" + state.entries.length + ")";
+    var rl = $("readyList"); rl.textContent = "";
+    if (state.entries.length) {
+      var ul = el("ul", "list two");
+      state.entries.forEach(function (e) {
+        var li = el("li"); li.appendChild(el("span", "w", e.w)); li.appendChild(el("span", "m", e.syns.join(", "))); ul.appendChild(li);
+      });
+      rl.appendChild(ul);
+    }
+    var box = $("missList"); box.textContent = "";
+    var keys = Object.keys(state.missed).sort(function (a, b) { return state.missed[b].n - state.missed[a].n || a.localeCompare(b); });
+    $("saveMissed").hidden = !keys.length || !dl;
+    $("clearMissed").hidden = !keys.length;
+    if (!keys.length) { box.appendChild(el("p", "empty", "No missed words yet. Words you get wrong are saved here.")); return; }
+    var ml = el("ul", "list");
+    keys.forEach(function (k) {
+      var m = state.missed[k], li = el("li");
+      li.appendChild(el("span", "w", m.w)); li.appendChild(el("span", "m", meaningOf(k, m.syn))); li.appendChild(el("span", "n", "missed " + m.n + "×"));
+      ml.appendChild(li);
+    });
+    box.appendChild(ml);
+  }
+  async function saveWords() {
+    var p = updateWordNote();
+    if (p.words.length < 1) return;
+    state.text = $("wordText").value;
+    rebuild(); renderHome(); renderWords();
+    $("lookupNote").classList.remove("err");
+    $("lookupNote").textContent = state.pending.length ? "" : "Word list saved. Every word is ready.";
+    await persist(["words"]);
+    if (state.pending.length) await lookupPending();
+  }
+  function loadFile(ev) {
+    var f = ev.target.files && ev.target.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () { $("wordText").value = String(r.result); updateWordNote(); $("lookupNote").classList.remove("err"); $("lookupNote").textContent = "File loaded. Press Save and look up words to use it."; };
+    r.readAsText(f);
+    ev.target.value = "";
+  }
+  async function saveMissedFile() {
+    var keys = Object.keys(state.missed).sort(function (a, b) { return state.missed[b].n - state.missed[a].n; });
+    var text = keys.map(function (k) { return state.missed[k].w; }).join("\n") + "\n";
+    try { await dl.save({ filename: "isee-missed-words.txt", data: text }); $("missNote").textContent = "File ready."; }
+    catch (e) { $("missNote").textContent = e && e.code === "declined" ? "Save cancelled." : "Saving a file is not available here."; }
+  }
+  var confirmClear = false;
+  async function clearMissed() {
+    var b = $("clearMissed");
+    if (!confirmClear) { confirmClear = true; b.textContent = "Press again to clear"; setTimeout(function () { confirmClear = false; b.textContent = "Clear missed list"; }, 4000); return; }
+    confirmClear = false; b.textContent = "Clear missed list";
+    state.missed = {}; renderWords(); renderHome();
+    await persist(["missed"]);
+  }
+
+  /* ---------- wiring ---------- */
+  $("startBtn").addEventListener("click", startTest);
+  $("nextBtn").addEventListener("click", next);
+  $("againBtn").addEventListener("click", startTest);
+  $("homeBtn").addEventListener("click", function () { renderHome(); show("home"); });
+  $("wordsBtn").addEventListener("click", function () { renderWords(); show("words"); });
+  $("backBtn").addEventListener("click", function () { renderHome(); show("home"); });
+  $("saveWords").addEventListener("click", saveWords);
+  $("wordText").addEventListener("input", updateWordNote);
+  $("fileIn").addEventListener("change", loadFile);
+  $("saveMissed").addEventListener("click", saveMissedFile);
+  $("clearMissed").addEventListener("click", clearMissed);
+  document.addEventListener("keydown", function (e) {
+    if ($("quiz").hidden || !q || q.answered || e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key.toLowerCase(), i = "abcd".indexOf(k);
+    if (i < 0) i = "1234".indexOf(k);
+    if (i > -1 && i < q.items[q.i].options.length) answer(i);
+  });
+
+  rebuild();
+  renderHome();
+  load();
+})();
+</script>
+
+</body>
+</html>
